@@ -1,81 +1,127 @@
-/usr/bin/python3
+#!/usr/bin/python3
 """
     python3 -c 'print(__import__("my_module").__doc__)'
 """
 
 
 class Node:
-    """Represent a node in a singly-linked list."""
+    """Node class. """
 
     def __init__(self, data, next_node=None):
-        """Initialize a new Node.
-
+        """__init__ method that sets data and next_node of node.
         Args:
-            data (int): The data of the new Node.
-            next_node (Node): The next node of the new Node.
+            data (int): integer data of node
+            next_node (Node, optional): next node, default is None
         """
         self.data = data
         self.next_node = next_node
 
     @property
     def data(self):
-        """Get/set the data of the Node."""
-        return (self.__data)
+        """Gets the data of the Node.
+        Returns:
+            data
+        """
+        return self.__data
+
+    @property
+    def next_node(self):
+        """Gets the next_node of the Node.
+        Returns:
+            Node or None
+        """
+        return self.__next_node
 
     @data.setter
     def data(self, value):
+        """data setter method that sets the data of node.
+        Args:
+            value (int): data of node
+        Raises:
+            TypeError: If `value` is not an integer.
+        """
         if not isinstance(value, int):
             raise TypeError("data must be an integer")
         self.__data = value
 
-    @property
-    def next_node(self):
-        """Get/set the next_node of the Node."""
-        return (self.__next_node)
-
     @next_node.setter
     def next_node(self, value):
-        if not isinstance(value, Node) and value is not None:
+        """next_node setter method that sets the next node.
+        Args:
+            value (Node, optional): Node or None
+        Raises:
+            TypeError: If `value` is not a Node object or None.
+        """
+        if value is None or isinstance(value, Node):
+            self.__next_node = value
+        else:
             raise TypeError("next_node must be a Node object")
-        self.__next_node = value
 
 
 class SinglyLinkedList:
-    """Represent a singly-linked list."""
+    """Singly linked list class."""
 
     def __init__(self):
-        """Initalize a new SinglyLinkedList."""
+        """__init__ method for singly linked list"""
         self.__head = None
 
     def sorted_insert(self, value):
-        """Insert a new Node to the SinglyLinkedList.
-
-        The node is inserted into the list at the correct
-        ordered numerical position.
-
+        """ sorted_insert method - inserts node in order
         Args:
-            value (Node): The new Node to insert.
+            value (int): data of new node
         """
         new = Node(value)
         if self.__head is None:
-            new.next_node = None
-            self.__head = new
-        elif self.__head.data > value:
-            new.next_node = self.__head
             self.__head = new
         else:
-            tmp = self.__head
-            while (tmp.next_node is not None and
-                    tmp.next_node.data < value):
-                tmp = tmp.next_node
-            new.next_node = tmp.next_node
-            tmp.next_node = new
+            curr = self.__head
+            while curr.next_node:
+                if new.data >= curr.data and new.data <= curr.next_node.data:
+                    new.next_node = curr.next_node
+                    curr.next_node = new
+                    break
+                elif new.data < curr.data:
+                    new.next_node = curr
+                    self.__head = new
+                    break
+                curr = curr.next_node
+            if new.data >= curr.data:
+                curr.next_node = new
+            else:
+                new.next_node = curr
+                self.__head = new
 
     def __str__(self):
-        """Define the print() representation of a SinglyLinkedList."""
-        values = []
-        tmp = self.__head
-        while tmp is not None:
-            values.append(str(tmp.data))
-            tmp = tmp.next_node
-        return ('\n'.join(values))
+        """string representation of singly linked list
+        Returns:
+            llstr: new-line separated list string
+        """
+        curr = self.__head
+        llstr = ''
+        if curr is None:
+            llstr = ''
+        elif curr.next_node is None:
+            llstr += str(curr.data)
+        else:
+            while curr.next_node:
+                llstr += str(curr.data) + '\n'
+                curr = curr.next_node
+            llstr += str(curr.data)
+        return llstr
+
+
+if __name__ == '__main__':
+    sll = SinglyLinkedList()
+
+    sll.sorted_insert(2)
+    sll.sorted_insert(5)
+    sll.sorted_insert(3)
+    sll.sorted_insert(10)
+    sll.sorted_insert(1)
+    sll.sorted_insert(-4)
+    sll.sorted_insert(-3)
+    sll.sorted_insert(4)
+    sll.sorted_insert(5)
+    sll.sorted_insert(12)
+    sll.sorted_insert(3)
+    print(sll)
