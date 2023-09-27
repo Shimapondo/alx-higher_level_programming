@@ -1,8 +1,8 @@
-!/usr/bin/python3
+#!/usr/bin/python3
+"""Define a class Square."""
 
-# 0-square.py
-# william <@holbertonschool.com>
 
 class Square:
-    """An empty class Square."""
+    """Represent a square."""
     pass
+
