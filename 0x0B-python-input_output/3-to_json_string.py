@@ -1,8 +1,10 @@
 #!/usr/bin/python3
-import json
 """
     python3 -c 'print(__import__("my_module").__doc__)'
 """
+
+
+import json
 
 
 def to_json_string(my_obj):
