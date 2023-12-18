@@ -1,28 +1,26 @@
 #!/usr/bin/python3
+"""Script displays states in database by ascending id order
+   Script should take 3 arguments:
+   mysql username, mysql password and database name
 """
-    python3 -c 'print(__import__("my_module").__doc__)'
-"""
-
 
 if __name__ == '__main__':
-import MySQLdb
-import sys
+    import sys
+    import MySQLdb
 
-mysql_username = sys.argv[1]
-mysql_password = sys.argv[2]
-database_name = sys.argv[3]
-
-
-cnx = MySQLdb.connect(user=mysql-username, password=mysql_password, host ='localhost', database=database_name, port=3306)
-
-cursor = cnx.cursor()
-query = ("SELECT * FROM states ORDER BY id ASC")
-cursor.execute(query)
-
-
-for (state,) in cursor:
-    print(state)
-
-
-cursor.close()
-cnx.close()
+    if len(sys.argv) > 3:
+        conn = MySQLdb.connect(
+            host="localhost",
+            port=3306,
+            user=sys.argv[1],
+            passwd=sys.argv[2],
+            db=sys.argv[3],
+            charset="utf8"
+        )
+        cur = conn.cursor()
+        cur.execute("""SELECT * FROM states ORDER BY states.id ASC""")
+        query_rows = cur.fetchall()
+        for row in query_rows:
+            print(row)
+        cur.close()
+        conn.close()
