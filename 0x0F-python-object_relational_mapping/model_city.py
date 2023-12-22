@@ -1,13 +1,29 @@
 #!/usr/bin/python3
-"""Contains the class definition of a State and an instance
-   Base = declarative_base()
+"""script that prints different cities present in a database
+    can not work if imported only works when run as a script
 """
-from sqlalchemy import Column, Integer, String, ForeignKey
-from model_state import State, Base
+import MySQLdb
+from sys import argv
 
 
-class City(Base):
-    __tablename__ = 'cities'
-    id = Column(Integer, nullable=False, unique=True, primary_key=True)
-    name = Column(String(128), nullable=False)
-    state_id = Column(Integer, ForeignKey('states.id'), nullable=False)
+if __name__ == "__main__":
+    """the part of the script that will be excuted when script is run
+    takes three arguments only
+    """
+    querry = """SELECT name
+                FROM cities
+                WHERE state_id = (
+                    SELECT id
+                    FROM states
+                    WHERE name LIKE BINARY %s
+                )
+                ORDER BY id"""
+    con = MySQLdb.connect(host="localhost", port=3306, passwd=argv[2],
+                          user=argv[1], db=argv[3], charset="utf8")
+    cur = con.cursor()
+    cur.execute(querry, (argv[4],))
+    result = cur.fetchall()
+    prt = ", ".join(value[0] for value in result)
+    print(prt)
+    cur.close()
+    con.close()
